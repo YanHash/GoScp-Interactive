@@ -27,7 +27,7 @@ func DescribeFolder(path string, name string) *Element {
 	return &Element{
 		path:        path,
 		name:        name,
-		isFolder:    false,
+		isFolder:    true,
 		subElements: nil,
 	}
 }
@@ -41,8 +41,9 @@ func isDirectory(path string) bool {
 }
 
 func ListElements(path string) []Element {
+	var output []Element
 	isDir := isDirectory(path)
-	output = []Element
+
 	if isDir {
 		elements, err := os.ReadDir(path)
 		if err != nil {
@@ -50,13 +51,16 @@ func ListElements(path string) []Element {
 		}
 
 		for _, element := range elements {
-			e = Element{
-				path: _,
-				name: e.name,
+			e := Element{
+				path:        filepath.Join(path, element.Name()),
+				name:        element.Name(),
+				isFolder:    element.IsDir(),
+				subElements: nil,
 			}
+			output = append(output, e)
 		}
-
 	}
+	return output
 }
 
 type File struct {
